@@ -22,6 +22,8 @@ struct Command {
 };
 
 static struct Command commands[] = {
+	//adding backtrace commands
+	{"backtrace" , "Stack backtrace", mon_backtrace },
 	{ "help", "Display this list of commands", mon_help },
 	{ "kerninfo", "Display information about the kernel", mon_kerninfo },
 };
@@ -57,8 +59,30 @@ mon_kerninfo(int argc, char **argv, struct Trapframe *tf)
 int
 mon_backtrace(int argc, char **argv, struct Trapframe *tf)
 {
-	// Your code here.
-	return 0;
+    int hasinfo;
+    uint32_t eip, ebp;
+    register int i;
+    struct Eipdebuginfo info;
+    cprintf("Stack backtraces");
+    cprintf("\n");
+    ebp = read_ebp();
+    while (ebp > 1) {
+        // printing traces using ebp to find eip and args
+        cprintf("  ebp %08x  eip %08x  args %08x %08x %08x %08x %08x\n", 
+                ebp, *(uint32_t *)(ebp + 4), *(uint32_t *)(ebp + 8), 		*(uint32_t *)(ebp + 12),
+                *(uint32_t *)(ebp + 16), *(uint32_t *)(ebp + 20), *(uint32_t *)(ebp + 24));
+       //assigning eip
+       eip = *(uint32_t *) ((uint32_t *) ebp +1);
+       hasinfo = debuginfo_eip(eip, &info);
+       cprintf("          %s:%d: ", info.eip_file, info.eip_line);
+       for(i=0; i<info.eip_fn_namelen; i++)
+            cprintf("%c", *(info.eip_fn_name+i));
+       cprintf("+%d\n", eip - info.eip_fn_addr);
+       //host ebp
+       ebp = *(uint32_t *)ebp;
+    }
+    return 0;
+
 }
 
 
