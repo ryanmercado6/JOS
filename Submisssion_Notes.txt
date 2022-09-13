@@ -1,0 +1,8 @@
+At the start of getting ubuntu and VM to run only god and I knew how it worked. Now only god knows.
+This assignment is the most difficult thing i have tackled in all of my college career and as my work as a dev. Setting up VM, Ubuntu and
+qemu based off MITs instructions that mainly provided support for Athena and not our systems was a nightmare that I endured from 7pm-5am. 
+Main issues with setting up ubuntu were a refusal to boot, due to a bad version of ubuntu. Then after boot I was constantly met with a black screen that forced me to 
+restart my system often which was fixed by editing my graphics settings and updating my video card. When it came to building qemu I expereiced a ton of errors that 
+were not addressed in MITs docs including permissions and required libraries that i needed to download. After hours of finally setting up qemu the exercises did not 
+present much of a challenge to me as 11 and 12 were something similar to what I would expereince in a leetcode medium and 8 was basically given to me in the case above if
+i just looked at the code. Overall, setup was terrible and pls never make me do something like that again.
