@@ -1,0 +1,25 @@
+﻿Lab 3 Questions
+
+
+1. What is the purpose of having an individual handler function for each exception/interrupt? (i.e., if all exceptions/interrupts were delivered to the same handler, what feature that exists in the current implementation could not be provided?)
+
+It allows different permissions and processes to be assigned to different handlers. By having all exception/interrupt cases being thrown at the same handler, it would not be possible to maintain privilege isolation between user and kernel programs. Also it allows us to distinguish between interrupts and exceptions by distinguishing each handler function to only be called for one specific exception or interrupt.
+
+
+
+
+2. Did you have to do anything to make the user/softint program behave correctly? The grade script expects it to produce a general protection fault (trap 13), but softint's code says int $14. Why should this produce interrupt vector 13? What happens if the kernel actually allows softint's int $14 instruction to invoke the kernel's page fault handler (which is interrupt vector 14)?
+
+
+I did not have to do anything, hopefully that's right. user/softint produces a 13 because it does not have the permission to throw a 14. Instead it produces a general fault being 13. If the kernel did allow $14 to be thrown virtual memory can be changed in a way that breaks the system. Or the world explodes and we all die idk.
+
+
+
+3. The break point test case will either generate a break point exception or a general protection fault depending on how you initialized the break point entry in the IDT (i.e., your call to SETGATE from trap_init). Why? How do you need to set it up in order to get the breakpoint exception to work as specified above and what incorrect setup would cause it to trigger a general protection fault?
+The permission for the breakpoint exception is set for the user. To make it raise a general protection fault you would set it to kernel.
+
+
+
+
+4. What do you think is the point of these mechanisms, particularly in light of what the user/softint test program does?
+The point of these things, like answered before, is to provide guardrails for what user code can do. By separating different handlers and permissions you can prevent virtual memory from being manipulated and breaking the system.
